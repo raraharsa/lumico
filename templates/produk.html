@@ -1,39 +1,52 @@
 {% extends "base.html" %} {% block title %}Produk{% endblock %} {% block content %}
-<h2>Produk</h2>
-<form method="post" style="margin-bottom: 10px; max-width: 500px">
-  <input type="text" name="q" placeholder="Cari nama produk..." value="{{ q }}" />
-  <div style="margin-top: 8px">
-    <span><button class="btn" type="submit">Cari</button></span>
-    <a class="btn" href="{{ url_for('produk') }}">Reset</a>
-  </div>
-</form>
+<h2 style="margin-bottom: 20px">Produk</h2>
 
-<table>
-  <thead>
+<!-- FORM SEARCH -->
+<div style="background: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); max-width: 500px; margin-bottom: 20px">
+  <form method="post" style="width: 90%">
+    <input type="text" name="q" placeholder="Cari nama produk..." value="{{ q }}" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 12px" />
+
+    <div style="display: flex; gap: 10px">
+      <button class="btn" type="submit" style="padding: 8px 15px; border-radius: 8px">Cari</button>
+
+      <a class="btn" href="{{ url_for('produk') }}" style="padding: 8px 15px; border-radius: 8px"> Reset </a>
+    </div>
+  </form>
+</div>
+
+<!-- TABLE PRODUK -->
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08)">
+  <thead style="background: #f5f5f5">
     <tr>
-      <th>Nama</th>
-      <th>Harga (Rp)</th>
-      <th>Aksi</th>
+      <th style="padding: 12px; text-align: left">Nama</th>
+      <th style="padding: 12px; text-align: left">Harga (Rp)</th>
+      <th style="padding: 12px; text-align: center; width: 160px">Aksi</th>
     </tr>
   </thead>
+
   <tbody>
     {% for p in items %}
     <tr>
-      <td>{{ p.nama_barang }}</td>
-      <td>{{ "{:,}".format(p.harga) }}</td>
-      <td>
-        <form method="post" action="{{ url_for('cart_add') }}">
+      <td style="padding: 12px; border-top: 1px solid #eee">{{ p.nama_barang }}</td>
+
+      <td style="padding: 12px; border-top: 1px solid #eee">{{ "{:,}".format(p.harga) }}</td>
+
+      <td style="padding: 12px; text-align: center; border-top: 1px solid #eee">
+        <form method="post" action="{{ url_for('cart_add') }}" style="display: flex; gap: 6px; justify-content: center">
           <input type="hidden" name="id_barang" value="{{ p.id_barang }}" />
-          <input type="number" name="jumlah" value="1" min="1" style="width: 80px" />
-          <button class="btn" type="submit">Tambah</button>
+
+          <input type="number" name="jumlah" value="1" min="1" style="width: 60px; padding: 6px; border-radius: 6px; border: 1px solid #ccc; text-align: center" />
+
+          <button class="btn" type="submit" style="padding: 6px 12px; border-radius: 8px">Tambah</button>
         </form>
       </td>
     </tr>
     {% else %}
     <tr>
-      <td colspan="3">Tidak ada produk.</td>
+      <td colspan="3" style="padding: 14px; text-align: center; color: #777">Tidak ada produk.</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
 {% endblock %}

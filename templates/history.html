@@ -1,29 +1,98 @@
 {% extends "base.html" %} {% block title %}Riwayat Transaksi{% endblock %} {% block content %}
+
+<style>
+  /* ===== RIWAYAT TABLE — KHUSUS HALAMAN INI ===== */
+
+  .history-card {
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin-top: 15px;
+  }
+
+  .history-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+
+  .history-table thead tr {
+    background: #f1e9e1;
+  }
+
+  .history-table th {
+    padding: 14px 16px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .history-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* ID & tanggal rapih */
+  .history-table td:nth-child(1) {
+    width: 10%;
+  }
+  .history-table td:nth-child(2) {
+    width: 20%;
+  }
+
+  /* Total rata kanan */
+  .history-table td:nth-child(5),
+  .history-table th:nth-child(5) {
+    text-align: right;
+  }
+
+  /* Hover */
+  .history-table tbody tr:hover {
+    background: #faf6f3;
+    transition: 0.15s;
+  }
+
+  /* Empty row */
+  .history-empty {
+    text-align: center;
+    padding: 25px;
+    font-style: italic;
+    color: #888;
+  }
+</style>
+
 <h2>Riwayat Transaksi</h2>
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Tanggal</th>
-      <th>Kasir</th>
-      <th>Pelanggan</th>
-      <th>Total (Rp)</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for r in rows %}
-    <tr>
-      <td>{{ r.id_transaksi }}</td>
-      <td>{{ r.tanggal }}</td>
-      <td>{{ r.nama_kasir }}</td>
-      <td>{{ r.nama_pelanggan }}</td>
-      <td>{{ "{:,}".format(r.total) }}</td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="5">Belum ada transaksi.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+
+<div class="history-card">
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tanggal</th>
+        <th>Kasir</th>
+        <th>Pelanggan</th>
+        <th>Total (Rp)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if rows and rows|length > 0 %} {% for r in rows %}
+      <tr>
+        <td>{{ r.id_transaksi }}</td>
+        <td>{{ r.tanggal }}</td>
+        <td>{{ r.nama_kasir }}</td>
+        <td>{{ r.nama_pelanggan }}</td>
+        <td>Rp {{ "{:,}".format(r.total) }}</td>
+      </tr>
+      {% endfor %} {% else %}
+      <tr>
+        <td colspan="5" class="history-empty">Belum ada transaksi.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}

@@ -1,65 +1,227 @@
+<!-- Versi transaksi.html yang sudah dirapikan dan diperbaiki alignment tabel -->
 {% extends "base.html" %} {% block title %}Transaksi Baru{% endblock %} {% block content %}
-<h2>Transaksi</h2>
 
-<div style="display: flex; gap: 12px; flex-wrap: wrap">
-  <a class="btn" href="{{ url_for('produk') }}">Cari & Tambah Produk</a>
-  <a class="btn" href="{{ url_for('history') }}">Riwayat</a>
+<style>
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .page-header h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .actions a {
+    margin-left: 8px;
+  }
+
+  .card-modern {
+    background: var(--cream-light);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+
+  .card-modern h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  /* TABEL */
+  .table-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #eaded3;
+  }
+
+  .modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+
+  .modern-table thead tr {
+    background: #f1e9e2;
+  }
+
+  .modern-table th {
+    text-align: left;
+    padding: 12px;
+    color: #3f2d1e;
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 1px solid #e2d5c7;
+  }
+
+  .modern-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f2ebe5;
+    vertical-align: middle;
+  }
+
+  .empty-row {
+    text-align: center;
+    padding: 16px;
+    color: #7a6a5e;
+    font-style: italic;
+  }
+
+  .input-number {
+    width: 70px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid #c9b8a9;
+    text-align: center;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  .select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #c7b6a7;
+    margin-bottom: 12px;
+  }
+
+  .btn-primary {
+    background: var(--brown-main);
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--brown-dark);
+  }
+
+  .btn-danger {
+    background: #d46a6a;
+    padding: 10px 14px;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-danger:hover {
+    background: #b55252;
+  }
+
+  .btn-success {
+    background: #4da06a;
+    padding: 12px 18px;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-success:hover {
+    background: #3b8456;
+  }
+
+  .card-actions {
+    margin-top: 10px;
+    text-align: right;
+  }
+</style>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h2>Transaksi</h2>
+
+  <div class="actions">
+    <a class="btn-primary" href="{{ url_for('produk') }}">+ Tambah Produk</a>
+    <a class="btn-primary" style="background: #c6a489" href="{{ url_for('history') }}">Riwayat</a>
+  </div>
 </div>
 
-<h3 style="margin-top: 12px">Keranjang</h3>
+<!-- KERANJANG -->
+<div class="card-modern">
+  <h3>Keranjang</h3>
+
+  <form method="post" action="{{ url_for('cart_update') }}">
+    <input type="hidden" name="action" value="update" />
+
+    <div class="table-wrapper">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th style="width: 100px">Jumlah</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% if cart and cart|length > 0 %} {% for it in cart %}
+          <tr>
+            <td>
+              <input type="hidden" name="id_barang" value="{{ it.id_barang }}" />
+              {{ it.nama_barang }}
+            </td>
+
+            <td>Rp {{ "{:,}".format(it.harga) }}</td>
+
+            <td>
+              <input type="number" name="jumlah" value="{{ it.jumlah }}" min="0" class="input-number" />
+            </td>
+
+            <td>Rp {{ "{:,}".format(it.subtotal) }}</td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td colspan="4" class="empty-row">Keranjang masih kosong ✨</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-actions">
+      <button class="btn-primary" type="submit">Perbarui Keranjang</button>
+    </div>
+  </form>
+</div>
+
+<!-- CHECKOUT -->
+<div class="card-modern">
+  <h3>Checkout</h3>
+
+  <form method="post">
+    <label>Pelanggan</label>
+    <select name="id_pelanggan" class="select">
+      {% for pl in pelanggan %}
+      <option value="{{ pl.id_pelanggan }}">{{ pl.nama_pelanggan }}</option>
+      {% endfor %}
+    </select>
+
+    <button class="btn-success" type="submit">Checkout & Simpan Transaksi</button>
+  </form>
+</div>
+
+<!-- CLEAR CART -->
 <form method="post" action="{{ url_for('cart_update') }}">
-  <input type="hidden" name="action" value="update" />
-  <table>
-    <thead>
-      <tr>
-        <th>Nama</th>
-        <th>Harga</th>
-        <th>Jumlah</th>
-        <th>Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if cart and cart|length>0 %} {% for it in cart %}
-      <tr>
-        <td>
-          <input type="hidden" name="id_barang" value="{{ it.id_barang }}" />
-          <input type="hidden" name="nama_barang" value="{{ it.nama_barang }}" />
-          <input type="hidden" name="harga" value="{{ it.harga }}" />
-          {{ it.nama_barang }}
-        </td>
-        <td>{{ "{:,}".format(it.harga) }}</td>
-        <td><input type="number" name="jumlah" value="{{ it.jumlah }}" min="0" style="width: 80px" /></td>
-        <td>{{ "{:,}".format(it.subtotal) }}</td>
-      </tr>
-      {% endfor %} {% else %}
-      <tr>
-        <td colspan="4">Keranjang kosong. Tambahkan produk dari menu Produk.</td>
-      </tr>
-      {% endif %}
-    </tbody>
-  </table>
-
-  <div style="margin-top: 8px">
-    <button class="btn" type="submit">Perbarui Keranjang</button>
-  </div>
-</form>
-
-<form method="post" style="margin-top: 12px">
-  <label>Pelanggan</label>
-  <select name="id_pelanggan">
-    {% for pl in pelanggan %}
-    <option value="{{ pl.id_pelanggan }}">{{ pl.nama_pelanggan }}</option>
-    {% endfor %}
-  </select>
-
-  <div style="margin-top: 8px">
-    <button class="btn" type="submit">Checkout & Simpan Transaksi</button>
-  </div>
-</form>
-
-<form method="post" action="{{ url_for('cart_update') }}" style="margin-top: 8px">
   <input type="hidden" name="action" value="clear" />
-  <button class="btn" type="submit">Kosongkan Keranjang</button>
+  <button class="btn-danger" type="submit">Kosongkan Keranjang</button>
 </form>
 
 {% endblock %}
