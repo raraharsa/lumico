@@ -1,0 +1,65 @@
+{% extends "base.html" %} {% block title %}Transaksi Baru{% endblock %} {% block content %}
+<h2>Transaksi</h2>
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+  <a class="btn" href="{{ url_for('produk') }}">Cari & Tambah Produk</a>
+  <a class="btn" href="{{ url_for('history') }}">Riwayat</a>
+</div>
+
+<h3 style="margin-top: 12px">Keranjang</h3>
+<form method="post" action="{{ url_for('cart_update') }}">
+  <input type="hidden" name="action" value="update" />
+  <table>
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Harga</th>
+        <th>Jumlah</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if cart and cart|length>0 %} {% for it in cart %}
+      <tr>
+        <td>
+          <input type="hidden" name="id_barang" value="{{ it.id_barang }}" />
+          <input type="hidden" name="nama_barang" value="{{ it.nama_barang }}" />
+          <input type="hidden" name="harga" value="{{ it.harga }}" />
+          {{ it.nama_barang }}
+        </td>
+        <td>{{ "{:,}".format(it.harga) }}</td>
+        <td><input type="number" name="jumlah" value="{{ it.jumlah }}" min="0" style="width: 80px" /></td>
+        <td>{{ "{:,}".format(it.subtotal) }}</td>
+      </tr>
+      {% endfor %} {% else %}
+      <tr>
+        <td colspan="4">Keranjang kosong. Tambahkan produk dari menu Produk.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div style="margin-top: 8px">
+    <button class="btn" type="submit">Perbarui Keranjang</button>
+  </div>
+</form>
+
+<form method="post" style="margin-top: 12px">
+  <label>Pelanggan</label>
+  <select name="id_pelanggan">
+    {% for pl in pelanggan %}
+    <option value="{{ pl.id_pelanggan }}">{{ pl.nama_pelanggan }}</option>
+    {% endfor %}
+  </select>
+
+  <div style="margin-top: 8px">
+    <button class="btn" type="submit">Checkout & Simpan Transaksi</button>
+  </div>
+</form>
+
+<form method="post" action="{{ url_for('cart_update') }}" style="margin-top: 8px">
+  <input type="hidden" name="action" value="clear" />
+  <button class="btn" type="submit">Kosongkan Keranjang</button>
+</form>
+
+{% endblock %}

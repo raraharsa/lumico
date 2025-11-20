@@ -1,0 +1,98 @@
+{% extends "base.html" %} {% block title %}Login - Kasir Pantai{% endblock %} {% block content %}
+
+<style>
+  body {
+    background: linear-gradient(to bottom, #cfeef7, #ffffff);
+    font-family: "Poppins", sans-serif;
+  }
+
+  .login-container {
+    max-width: 520px;
+    margin: 60px auto;
+
+    padding: 40px 45px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  .login-logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .login-logo img {
+    width: 150px;
+  }
+
+  .field {
+    margin-top: 22px;
+  }
+
+  .field label {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1.5px solid #cfd6da;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: 0.2s;
+  }
+
+  .field input:focus {
+    border-color: #71c4f0;
+    box-shadow: 0 0 8px rgba(113, 196, 240, 0.35);
+  }
+
+  .btn-login {
+    margin-top: 32px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px; /* DISAMAKAN dengan input */
+    background: #84c8e9;
+    font-weight: 600;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-login:hover {
+    background: #6ebbe1;
+  }
+
+  .footer-note {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 13px;
+    color: #737373;
+  }
+</style>
+
+<div class="login-container">
+  <div class="login-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" />
+  </div>
+
+  <form method="post">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="username" required />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" required />
+    </div>
+
+    <button class="btn-login" type="submit">Login</button>
+  </form>
+</div>
+
+{% endblock %}

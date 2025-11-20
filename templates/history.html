@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Riwayat Transaksi{% endblock %} {% block content %}
+<h2>Riwayat Transaksi</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tanggal</th>
+      <th>Kasir</th>
+      <th>Pelanggan</th>
+      <th>Total (Rp)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.id_transaksi }}</td>
+      <td>{{ r.tanggal }}</td>
+      <td>{{ r.nama_kasir }}</td>
+      <td>{{ r.nama_pelanggan }}</td>
+      <td>{{ "{:,}".format(r.total) }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="5">Belum ada transaksi.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
