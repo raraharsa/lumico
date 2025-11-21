@@ -260,6 +260,40 @@ def history():
 
     return render_template('history.html', rows=rows)
 
+ # detail transaksi
+@app.route("/detail/<int:id_transaksi>")
+@login_required
+def detail_transaksi(id_transaksi):
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Ambil data transaksi
+    cursor.execute("""
+        SELECT t.id_transaksi, t.total, t.tanggal,
+               p.nama_pelanggan, k.nama_kasir
+        FROM transaksi t
+        JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
+        JOIN kasir k ON t.id_kasir = k.id_kasir
+        WHERE t.id_transaksi = %s
+    """, (id_transaksi,))
+    trx = cursor.fetchone()
+
+    # Ambil detail barang
+    cursor.execute("""
+        SELECT d.jumlah, d.subtotal, b.nama_barang, b.harga
+        FROM detail_transaksi d
+        JOIN barang b ON d.id_barang = b.id_barang
+        WHERE d.id_transaksi = %s
+    """, (id_transaksi,))
+    detail = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("detail_transaksi.html", trx=trx, detail=detail)
+
+
 # jalankan aplikasi
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

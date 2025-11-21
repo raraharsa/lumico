@@ -1,0 +1,125 @@
+{% extends "base.html" %} {% block title %}Detail Transaksi{% endblock %} {% block content %}
+
+<style>
+  .detail-header {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .info-box {
+    background: var(--cream-light);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  .info-box b {
+    color: #5c4630;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #eaded3;
+    background: white;
+  }
+
+  .modern-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .modern-table thead tr {
+    background: #f1e9e2;
+  }
+
+  .modern-table th {
+    text-align: left;
+    padding: 12px;
+    color: #3f2d1e;
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 1px solid #e2d5c7;
+  }
+
+  .modern-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f2ebe5;
+  }
+
+  .btn-primary {
+    background: var(--brown-main);
+    padding: 12px 18px;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  .btn-primary:hover {
+    background: var(--brown-dark);
+  }
+  /* PRINT STYLE */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    .print-area,
+    .print-area * {
+      visibility: visible;
+    }
+    .print-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    .btn-primary {
+      display: none !important;
+    }
+  }
+</style>
+
+<div class="print-area">
+  <h2 class="detail-header">Detail Transaksi #{{ trx.id_transaksi }}</h2>
+
+  <div class="info-box">
+    <p><b>Pelanggan:</b> {{ trx.nama_pelanggan }}</p>
+    <p><b>Kasir:</b> {{ trx.nama_kasir }}</p>
+    <p><b>Tanggal:</b> {{ trx.tanggal }}</p>
+    <p><b>Total:</b> Rp {{ "{:,}".format(trx.total) }}</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Barang</th>
+          <th>Harga</th>
+          <th>Jumlah</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for d in detail %}
+        <tr>
+          <td>{{ d.nama_barang }}</td>
+          <td>Rp {{ "{:,}".format(d.harga) }}</td>
+          <td>{{ d.jumlah }}</td>
+          <td>Rp {{ "{:,}".format(d.subtotal) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<button onclick="window.print()" class="btn-primary" style="margin-right: 10px">Cetak Struk</button>
+<a class="btn-primary" href="{{ url_for('history') }}">Kembali</a>
+
+{% endblock %}

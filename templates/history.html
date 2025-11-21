@@ -74,6 +74,7 @@
         <th>Kasir</th>
         <th>Pelanggan</th>
         <th>Total (Rp)</th>
+        <th>Aksi</th>
       </tr>
     </thead>
 
@@ -85,10 +86,15 @@
         <td>{{ r.nama_kasir }}</td>
         <td>{{ r.nama_pelanggan }}</td>
         <td>Rp {{ "{:,}".format(r.total) }}</td>
+
+        <!-- INI KOLOM AKSI -->
+        <td>
+          <a class="btn-primary" href="{{ url_for('detail_transaksi', id_transaksi=r.id_transaksi) }}"> Detail </a>
+        </td>
       </tr>
       {% endfor %} {% else %}
       <tr>
-        <td colspan="5" class="history-empty">Belum ada transaksi.</td>
+        <td colspan="6" class="history-empty">Belum ada transaksi.</td>
       </tr>
       {% endif %}
     </tbody>
